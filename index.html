@@ -11,9 +11,11 @@
         .slide .shout__white {
             color: black;
         }
+
         .slide .shout__white a {
             color: #4caf50;
         }
+
         .slide .shout__white:after {
             background: white;
         }
@@ -25,7 +27,7 @@
 </header>
 
 <section class="slide">
-    <h2>Angular 1 - MVC Framework</h2>
+    <h2 class="shout">MVC vs. Components</h2>
 </section>
 
 <section class="slide">
@@ -33,8 +35,265 @@
     <img class="cover" src="pictures/mvc.png" alt="">
 </section>
 
+<section class="slide">
+    <img src="pictures/mvc-problem.png" alt="" class="cover">
+</section>
 
-<!--eslint slide-->
+<section class="slide">
+    <h2>Angular 1.5 components (<a href="https://docs.angularjs.org/guide/component">link</a>)</h2>
+    <ul>
+        <li>проще</li>
+        <li>проще переходить на Angular 2</li>
+    </ul>
+</section>
+
+
+<section class="slide">
+    <h2>Community style guides (<a href="https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md#iife">link</a>)
+    </h2>
+    <ul>
+        <li>Пишите по одному компоненту на файл</li>
+        <li>Старайтесь писать маленькие функции</li>
+        <li>Старайтесь не использовать аннонимные функции</li>
+        <li></li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>IIFE</h2>
+    <pre><code>// logger.js
+(function() {
+    'use strict';
+    angular.module('app').factory('logger', logger);
+    function logger() { }
+})();
+
+        </code></pre>
+</section>
+
+
+<section class="slide">
+    <h2>Controllers</h2>
+    <pre><code>&lt;!-- avoid --&gt;
+&lt;div ng-controller="CustomerController"&gt;
+    {{ name }}
+&lt;/div&gt;
+&lt;!-- recommended --&gt;
+&lt;div ng-controller="CustomerController as customer"&gt;
+    {{ customer.name }}
+&lt;/div&gt;
+
+    </code></pre>
+</section>
+
+<section class="slide">
+    <h2>controllerAs with vm</h2>
+    <pre><code>/* recommended */
+function CustomerController() {
+    var vm = this;
+    vm.name = {};
+    vm.sendMessage = function() { };
+}
+    </code></pre>
+</section>
+
+
+<section class="slide">
+    <h2>Еще немного о контроллерах</h2>
+    <ul>
+        <li>опрределяйте переменные вверху</li>
+        <li>если функция большая - пишите внизу и связывайте вверху</li>
+        <li>старайтесь не переиспользовать контроллеры</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>Service vs Factory</h2>
+    <pre><code>// service
+angular.module('app').service('logger', logger);
+function logger() {
+  this.logError = function(msg) {
+    /* */
+  };
+}</code></pre>
+</section>
+
+
+<section class="slide">
+    <h2>Service vs Factory</h2>
+    <pre><code>// factory
+angular.module('app').factory('logger', logger);
+function logger() {
+    return {
+        logError: function(msg) { /* */ }
+   };
+}</code></pre>
+</section>
+
+
+<section class="slide">
+    <pre><code>function dataservice($http, $location, $q, exception, logger) {
+    var service = {
+        getAvengersCast: getAvengersCast,
+        getAvengerCount: getAvengerCount,
+        ...
+    };
+    return service;
+
+    function getAvengers() { /* implementation details go here */ }
+    // ...
+}</code></pre>
+</section>
+
+<section class="slide">
+<h2>Еще немного о сервисах</h2>
+    <ul>
+        <li>за общение с сервером, локал стораджем и любые операции с данными на уровне приложения</li>
+        <li>сервисы должны возвращать промисы</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>Директивы</h2>
+    <ul>
+        <li>Если уж и манипулируете DOM-ом, то тогда в директиве</li>
+        <li>Используйте controllerAs</li>
+    </ul>
+</section>
+
+
+
+<section class="slide">
+    <h2>Минификация</h2>
+    <pre><code>angular.module('app')
+.controller('DashboardController', DashboardController);
+
+DashboardController.$inject = ['$location', '$routeParams', 'common'];
+
+function DashboardController($location, $routeParams, common) {
+}</code></pre>
+</section>
+
+<section class="slide">
+    <h2>Минификация</h2>
+    <pre><code>/* @ngInject */
+function AvengersController(storage, avengerService) {
+    // ...
+}</code></pre>
+    сгенерирует
+    <pre><code>AvengersController.$inject = ['storage', 'avengerService'];</code></pre>
+</section>
+
+
+<section class="slide">
+    <h2>Обработка ошибок (<a
+            href="https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md#exception-handling">link</a>)</h2>
+    <ul>
+        <li>лучше просто посмотрите пример (по ссылке выше)</li>
+        <li>создайте фабрику для обработки ошибок</li>
+    </ul>
+
+</section>
+
+<section class="slide">
+    <h2>Именование</h2>
+    <ul>
+        <li>две основные техники <b>feature.type.js</b> или <b>FeatureType.js</b></li>
+        <li>для файлов с тестами <b>feature.type.spec.js</b> или <b>FeatureType.spec.js</b></li>
+        <li>для директив лучше использовать префикс: <b>xxMyDirective</b></li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>LIFT Principle</h2>
+    <ul>
+        <li>L - Locating our code is easy</li>
+        <li>I - Identify code at a glance</li>
+        <li>F - Flat structure as long as we can</li>
+        <li>T - Try to stay DRY (Don’t Repeat Yourself) or T-DRY</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>Folders</h2>
+    <li>один контроллер, сервис, директива... на один файл</li>
+    <li>не создавайте папку на тип объекта</li>
+    <li>старайтесь создавать папку на фичу</li>
+        <pre><code>     app/
+        app.module.js
+        components/
+        layout/
+        people/
+        sessions/
+        </code>
+    </pre>
+</section>
+
+<section class="slide">
+    <h2>Модульность</h2>
+    <ul>
+        <li>все-таки старайтесь не писать все в одном модуле</li>
+        <li>создайте корневой модуль цель которого - собрать все вместе</li>
+        <li>модуль в идеале - это переиспользуемый блок кода</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>Startup</h2>
+    <ul>
+        <li>используйте configure для первоначальной конфигурации</li>
+        <pre><code>angular.module('app').config(configure);
+configure.$inject = ['routerHelperProvider', 'toastr'];
+function configure (routerHelperProvider, toastr) {
+    // do something
+}</code></pre>
+        <li>Run блок - для кода, который нужно выполнить при запуске приложения</li>
+    </ul>
+</section>
+
+
+<section class="slide">
+    <h2>$Wrapper</h2>
+    <ul>
+        <li>$doucment и $window вместо document и window</li>
+        <li>$timeout и $interval вместо setTimeout и setInterval</li>
+    </ul>
+</section>
+
+
+<section class="slide">
+    <h2>Constants</h2>
+    <pre><code>/* global toastr:false, moment:false */
+(function() {
+    'use strict';
+    angular
+        .module('app.core')
+        .constant('toastr', toastr)
+        .constant('moment', moment);
+})();</code></pre>
+</section>
+
+<section class="slide">
+    <h2>Tests</h2>
+    <ul>
+        <li>лучше начинать прямо сейчас</li>
+        <li>для юнит тестов используйте <a href="http://jasmine.github.io/">jasmine</a> или <a
+                href="http://mochajs.org/">mocha</a></li>
+        <li>как тест раннер <a href="http://karma-runner.github.io/0.13/index.html">karma</a></li>
+        <li>тесты должны быть дескриптивными</li>
+        <pre><code>it('should have Avengers controller', function() {
+    // TODO
+});
+        </code></pre>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>Предложения</h2>
+    <ul>
+        <li>настройте и пользуйтесь <a href="http://eslint.org/">ESLint</a></li>
+    </ul>
+</section>
 
 
 <div class="progress"></div>
